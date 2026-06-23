@@ -1,0 +1,479 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-geist-sans), 'Geist Fallback';
+  --font-mono: var(--font-geist-mono), 'Geist Mono Fallback';
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+
+  /* Tokens específicos do VisageMed (glassmorphism) */
+  --color-vm-accent: var(--vm-accent);
+  --color-vm-success: var(--vm-success);
+  --color-vm-danger: var(--vm-danger);
+
+  --animate-fade-in: fadeIn 0.8s ease-out both;
+  --animate-fade-in-up: fadeInUp 0.8s ease-out both;
+}
+
+/*
+  VisageMed é uma aplicação dark-only. Definimos a mesma paleta escura
+  em :root, .dark e no media query para garantir consistência.
+*/
+:root,
+.dark {
+  color-scheme: dark;
+
+  --background: oklch(0 0 0); /* #000000 */
+  --foreground: oklch(0.918 0.004 286); /* #e5e5ea */
+
+  --card: oklch(0.23 0.004 286); /* ~#1c1c1e */
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.23 0.004 286);
+  --popover-foreground: oklch(0.985 0 0);
+
+  --primary: oklch(0.62 0.193 256); /* #0A84FF */
+  --primary-foreground: oklch(0.99 0 0);
+
+  --secondary: oklch(0.28 0.004 286);
+  --secondary-foreground: oklch(0.985 0 0);
+
+  --muted: oklch(0.28 0.004 286);
+  --muted-foreground: oklch(0.64 0.004 286); /* #8e8e93 */
+
+  --accent: oklch(0.62 0.193 256);
+  --accent-foreground: oklch(0.99 0 0);
+
+  --destructive: oklch(0.62 0.22 25); /* #FF3B30 */
+
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.62 0.193 256);
+
+  --radius: 0.875rem;
+
+  /* Aliases semânticos do VisageMed */
+  --vm-accent: oklch(0.62 0.193 256); /* #0A84FF */
+  --vm-success: oklch(0.78 0.18 150); /* #32D74B */
+  --vm-danger: oklch(0.62 0.22 25); /* #FF3B30 */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply bg-background font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  /* Painel de vidro reutilizável (menu, cards, modais) */
+  .vm-glass {
+    background-color: rgba(28, 28, 30, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Texto com gradiente prata usado em títulos e logo */
+  .vm-text-gradient {
+    background: linear-gradient(135deg, #ffffff 0%, #e5e5ea 50%, #a1a1a6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes vmSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   Ferramenta de Avaliação Facial (escopo .vm-avaliacao)
+   Estilos portados do avaliacao.html original. Mantemos os
+   nomes de classe (.ativo, .desativado, etc.) porque a lógica
+   imperativa de canvas os manipula via classList.
+   ========================================================= */
+@layer components {
+.vm-avaliacao {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.vm-avaliacao .menu-ferramentas {
+  background-color: rgba(28, 28, 30, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 56px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 50;
+  flex-shrink: 0;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.vm-avaliacao .item-menu {
+  color: #8e8e93;
+  font-size: 0.9em;
+  font-weight: 500;
+  padding: 8px 16px;
+  margin-right: 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  user-select: none;
+}
+.vm-avaliacao .item-menu:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.vm-avaliacao .item-menu.ativo {
+  color: #ffffff;
+  background-color: rgba(10, 132, 255, 0.2);
+  border: 1px solid rgba(10, 132, 255, 0.4);
+  box-shadow: 0 0 15px rgba(10, 132, 255, 0.2);
+}
+.vm-avaliacao .item-menu.desativado {
+  opacity: 0.35;
+  pointer-events: none;
+}
+.vm-avaliacao .item-menu.iniciar-ativo {
+  background-color: #0a84ff;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(10, 132, 255, 0.3);
+}
+.vm-avaliacao .item-menu.iniciar-ativo:hover {
+  background-color: #0070df;
+  box-shadow: 0 6px 25px rgba(10, 132, 255, 0.5);
+  transform: translateY(-2px);
+}
+.vm-avaliacao .grupo-direita {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+.vm-avaliacao #btnDownload.ativo-download {
+  background-color: #0a84ff;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(10, 132, 255, 0.3);
+}
+.vm-avaliacao #btnDownload.ativo-download:hover {
+  background-color: #0070df;
+  box-shadow: 0 6px 25px rgba(10, 132, 255, 0.5);
+  transform: translateY(-2px);
+}
+.vm-avaliacao input[type='file'] {
+  display: none;
+}
+
+.vm-avaliacao .container-principal {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+}
+
+.vm-avaliacao .painel-ferramentas {
+  width: 280px;
+  background-color: rgba(28, 28, 30, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  overflow-y: auto;
+  flex-shrink: 0;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.vm-avaliacao details {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.vm-avaliacao summary {
+  padding: 14px 18px;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #a1a1a6;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+.vm-avaliacao summary::-webkit-details-marker {
+  display: none;
+}
+.vm-avaliacao summary:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: #ffffff;
+}
+
+.vm-avaliacao .conteudo-seccao {
+  padding: 10px 18px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.vm-avaliacao .controle-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.vm-avaliacao .controle-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.vm-avaliacao .controle-cabecalho span {
+  font-size: 0.85em;
+  color: #e5e5ea;
+}
+.vm-avaliacao .controles-interativos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vm-avaliacao input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 4px;
+  background: #3a3a3c;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.vm-avaliacao input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+.vm-avaliacao input[type='range']::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.vm-avaliacao input[type='number'] {
+  width: 55px;
+  padding: 6px 8px;
+  border: 1px solid #3a3a3c;
+  border-radius: 6px;
+  background-color: rgba(44, 44, 46, 0.6);
+  color: #ffffff;
+  font-size: 0.85em;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.vm-avaliacao input[type='number']:focus {
+  border-color: #0a84ff;
+  outline: none;
+  box-shadow: 0 0 10px rgba(10, 132, 255, 0.3);
+}
+
+.vm-avaliacao .btn-reset {
+  background: transparent;
+  border: 1px solid #48484a;
+  color: #8e8e93;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: all 0.3s ease;
+}
+.vm-avaliacao .btn-reset:hover {
+  border-color: #8e8e93;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.vm-avaliacao .btn-global {
+  width: calc(100% - 36px);
+  padding: 12px;
+  background-color: rgba(44, 44, 46, 0.6);
+  border: 1px solid #48484a;
+  color: #ffffff;
+  font-size: 0.9em;
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  margin: 15px 18px;
+}
+.vm-avaliacao .btn-global:hover {
+  background-color: rgba(58, 58, 60, 0.7);
+  border-color: rgba(10, 132, 255, 0.5);
+  box-shadow: 0 0 20px rgba(10, 132, 255, 0.2);
+}
+.vm-avaliacao .btn-global.ativo {
+  background-color: rgba(10, 132, 255, 0.2);
+  border-color: #0a84ff;
+  box-shadow: 0 0 15px rgba(10, 132, 255, 0.3);
+}
+.vm-avaliacao .btn-global.desativado {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.vm-avaliacao .btn-toggle-medida {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background-color: rgba(44, 44, 46, 0.5);
+  border: 1px solid rgba(72, 72, 74, 0.5);
+  border-radius: 10px;
+  font-size: 0.85em;
+  color: #e5e5ea;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.vm-avaliacao .btn-toggle-medida:hover {
+  background-color: rgba(58, 58, 60, 0.6);
+  border-color: rgba(10, 132, 255, 0.3);
+  transform: translateX(4px);
+}
+.vm-avaliacao .btn-toggle-medida.ativo {
+  background-color: rgba(10, 132, 255, 0.15);
+  border-color: #0a84ff;
+  box-shadow: 0 0 15px rgba(10, 132, 255, 0.2);
+}
+.vm-avaliacao .btn-toggle-medida span {
+  font-weight: bold;
+  color: #8e8e93;
+  transition: transform 0.3s ease;
+}
+.vm-avaliacao .btn-toggle-medida.ativo span {
+  color: #0a84ff;
+}
+
+.vm-avaliacao .area-trabalho {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  overflow: hidden;
+  position: relative;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.vm-avaliacao .estado-inicial {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  width: 320px;
+  height: 220px;
+  border: 2px dashed rgba(10, 132, 255, 0.5);
+  background-color: rgba(10, 132, 255, 0.05);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.vm-avaliacao .estado-inicial:hover {
+  border-color: #0a84ff;
+  background-color: rgba(10, 132, 255, 0.1);
+  transform: scale(1.02);
+}
+.vm-avaliacao .icone-imagem {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 15px;
+  color: #ffffff;
+  opacity: 0.9;
+}
+.vm-avaliacao .carregando {
+  display: none;
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(10, 132, 255, 0.2);
+  border-top-color: #0a84ff;
+  border-radius: 50%;
+  animation: vmSpin 1s linear infinite;
+  margin-bottom: 15px;
+}
+.vm-avaliacao .texto-carregando {
+  display: none;
+  font-size: 0.95em;
+  color: #a1a1a6;
+  text-align: center;
+}
+
+.vm-avaliacao #telaEdicao {
+  width: 100%;
+  height: 100%;
+  display: none;
+  cursor: grab;
+}
+.vm-avaliacao #telaEdicao:active {
+  cursor: grabbing;
+}
+}
