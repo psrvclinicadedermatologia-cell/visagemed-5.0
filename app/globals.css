@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
+/* visagemed: dermatoscopia styles ativos */
 
 @custom-variant dark (&:is(.dark *));
 
@@ -668,6 +669,387 @@
 @media (max-width: 768px) {
   .vm-comparacao .area-comparacao {
     flex-direction: column;
+  }
+}
+
+/* =========================================================
+   Ferramenta de Dermatoscopia (escopo .vm-dermatoscopia)
+   ========================================================= */
+.vm-dermatoscopia {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.vm-dermatoscopia .menu-ferramentas {
+  background-color: rgba(28, 28, 30, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 0 20px;
+  min-height: 56px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 50;
+  flex-shrink: 0;
+  animation: fadeIn 0.6s ease-out;
+}
+.vm-dermatoscopia .item-menu {
+  color: #8e8e93;
+  font-size: 0.9em;
+  font-weight: 500;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  user-select: none;
+}
+.vm-dermatoscopia .item-menu:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.vm-dermatoscopia .item-menu.desativado {
+  opacity: 0.35;
+  pointer-events: none;
+}
+.vm-dermatoscopia .item-menu.iniciar-ativo {
+  background-color: #0a84ff;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(10, 132, 255, 0.3);
+}
+.vm-dermatoscopia .item-menu.iniciar-ativo:hover {
+  background-color: #0070df;
+  box-shadow: 0 6px 25px rgba(10, 132, 255, 0.5);
+  transform: translateY(-2px);
+}
+.vm-dermatoscopia .grupo-direita {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+.vm-dermatoscopia .item-menu.ativo-download {
+  background-color: #0a84ff;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(10, 132, 255, 0.3);
+}
+.vm-dermatoscopia .item-menu.ativo-download:hover {
+  background-color: #0070df;
+  box-shadow: 0 6px 25px rgba(10, 132, 255, 0.5);
+  transform: translateY(-2px);
+}
+.vm-dermatoscopia input[type='file'] {
+  display: none;
+}
+
+.vm-dermatoscopia .area-trabalho {
+  flex: 1;
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  overflow: hidden;
+  min-height: 0;
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+.vm-dermatoscopia .painel-imagem {
+  flex: 1;
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: rgba(28, 28, 30, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+.vm-dermatoscopia canvas {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+.vm-dermatoscopia canvas:active {
+  cursor: grabbing;
+}
+.vm-dermatoscopia .estado-inicial {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  width: 80%;
+  max-width: 300px;
+  height: 55%;
+  max-height: 200px;
+  border: 2px dashed rgba(10, 132, 255, 0.5);
+  background-color: rgba(10, 132, 255, 0.05);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.vm-dermatoscopia .estado-inicial:hover {
+  border-color: #0a84ff;
+  background-color: rgba(10, 132, 255, 0.1);
+  transform: scale(1.02);
+}
+.vm-dermatoscopia .overlay-conteudo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.vm-dermatoscopia .icone-imagem {
+  width: 52px;
+  height: 52px;
+  margin-bottom: 12px;
+  color: #ffffff;
+  opacity: 0.9;
+}
+.vm-dermatoscopia .overlay-titulo {
+  font-weight: 600;
+  font-size: 1.05em;
+  color: #ffffff;
+}
+.vm-dermatoscopia .overlay-subtitulo {
+  font-size: 0.85em;
+  color: #a1a1a6;
+  margin-top: 6px;
+}
+
+/* painel de avaliação */
+.vm-dermatoscopia .painel-avaliacao {
+  width: 360px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 16px;
+  background-color: rgba(28, 28, 30, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow-y: auto;
+}
+.vm-dermatoscopia .seletor-metodo {
+  display: flex;
+  gap: 4px;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 4px;
+  border-radius: 10px;
+}
+.vm-dermatoscopia .aba-metodo {
+  flex: 1;
+  font-size: 0.72em;
+  font-weight: 600;
+  color: #8e8e93;
+  background: transparent;
+  border: none;
+  padding: 8px 4px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.vm-dermatoscopia .aba-metodo:hover {
+  color: #ffffff;
+}
+.vm-dermatoscopia .aba-metodo.ativa {
+  color: #ffffff;
+  background-color: rgba(10, 132, 255, 0.85);
+}
+.vm-dermatoscopia .conteudo-metodo {
+  flex: 1;
+}
+.vm-dermatoscopia .grupo-criterios {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.vm-dermatoscopia .legenda-grupo {
+  font-size: 0.78em;
+  color: #a1a1a6;
+  line-height: 1.5;
+}
+.vm-dermatoscopia .titulo-secao {
+  font-size: 0.72em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #0a84ff;
+  margin-top: 8px;
+}
+.vm-dermatoscopia .criterio {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.vm-dermatoscopia .criterio:hover {
+  border-color: rgba(10, 132, 255, 0.4);
+  background-color: rgba(10, 132, 255, 0.06);
+}
+.vm-dermatoscopia .criterio.ativo {
+  border-color: rgba(10, 132, 255, 0.6);
+  background-color: rgba(10, 132, 255, 0.12);
+}
+.vm-dermatoscopia .criterio-check {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75em;
+  color: #ffffff;
+  margin-top: 1px;
+}
+.vm-dermatoscopia .criterio.ativo .criterio-check {
+  background-color: #0a84ff;
+  border-color: #0a84ff;
+}
+.vm-dermatoscopia .criterio-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.vm-dermatoscopia .criterio-titulo {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #ffffff;
+}
+.vm-dermatoscopia .criterio-desc {
+  font-size: 0.75em;
+  color: #a1a1a6;
+  line-height: 1.4;
+}
+.vm-dermatoscopia .grupo-pilulas {
+  display: flex;
+  gap: 6px;
+}
+.vm-dermatoscopia .pilula {
+  width: 40px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: rgba(255, 255, 255, 0.03);
+  color: #c7c7cc;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.vm-dermatoscopia .pilula:hover {
+  border-color: rgba(10, 132, 255, 0.4);
+}
+.vm-dermatoscopia .pilula.ativa {
+  background-color: #0a84ff;
+  border-color: #0a84ff;
+  color: #ffffff;
+}
+.vm-dermatoscopia .campo-slider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.vm-dermatoscopia .campo-slider input[type='range'] {
+  flex: 1;
+  accent-color: #0a84ff;
+}
+.vm-dermatoscopia .valor-slider {
+  font-size: 0.8em;
+  font-weight: 600;
+  color: #ffffff;
+  min-width: 36px;
+  text-align: right;
+}
+.vm-dermatoscopia .grupo-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.vm-dermatoscopia .chip {
+  font-size: 0.78em;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: rgba(255, 255, 255, 0.03);
+  color: #c7c7cc;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.vm-dermatoscopia .chip:hover {
+  border-color: rgba(10, 132, 255, 0.4);
+}
+.vm-dermatoscopia .chip.ativo {
+  background-color: rgba(10, 132, 255, 0.85);
+  border-color: #0a84ff;
+  color: #ffffff;
+}
+.vm-dermatoscopia .caixa-resultado {
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1px solid;
+}
+.vm-dermatoscopia .caixa-resultado.nivel-baixo {
+  background-color: rgba(48, 209, 88, 0.12);
+  border-color: rgba(48, 209, 88, 0.4);
+}
+.vm-dermatoscopia .caixa-resultado.nivel-medio {
+  background-color: rgba(255, 159, 10, 0.12);
+  border-color: rgba(255, 159, 10, 0.4);
+}
+.vm-dermatoscopia .caixa-resultado.nivel-alto {
+  background-color: rgba(255, 69, 58, 0.12);
+  border-color: rgba(255, 69, 58, 0.45);
+}
+.vm-dermatoscopia .resultado-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.vm-dermatoscopia .resultado-rotulo {
+  font-size: 1em;
+  font-weight: 700;
+  color: #ffffff;
+}
+.vm-dermatoscopia .resultado-score {
+  font-size: 0.85em;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.vm-dermatoscopia .resultado-detalhe {
+  font-size: 0.8em;
+  color: #e5e5ea;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+.vm-dermatoscopia .aviso-clinico {
+  font-size: 0.72em;
+  color: #6e6e73;
+  line-height: 1.5;
+}
+@media (max-width: 900px) {
+  .vm-dermatoscopia .area-trabalho {
+    flex-direction: column;
+  }
+  .vm-dermatoscopia .painel-avaliacao {
+    width: 100%;
   }
 }
 }
